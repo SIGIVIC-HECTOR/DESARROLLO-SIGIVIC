@@ -1,0 +1,1 @@
+activate & cd.. & cd registros_victimas & python manage.py runserver
