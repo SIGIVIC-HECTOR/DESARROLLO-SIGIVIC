@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<h3>Intermediarios</h3>
+		<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+		<table class="table table-bordered table-hover table-striped table-reflow tabla">
+	  		<ul>
+	  		<tr>
+				<th>ID</th>
+				<th>Primer nombre</th>
+				<th>Demás nombres</th>
+				<th>Primer apellido</th>
+				<th>Segundo apellido</th>
+				<th>Número de documento</th>
+				<th>Acciones</th>
+			</tr>
+		{% for i in registros %}
+		<tr>
+			<td>{{i.id}}</td>
+			<td>{{i.primer_nombre_intermediario}}</td>
+			<td>{{i.demas_nombres_intermediario}}</td>
+			<td>{{i.primer_apellido_intermediario}}</td>
+			<td>{{i.segundo_apellido_intermediario}}</td>
+			<td>{{i.numero_documento_intermediario}}</td>
+			<td><a class="glyphicon glyphicon-edit icon-align" title="Ver registro" href="{% url 'solicitantes:update_intermediario' i.id %}">
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if registros.has_previous %}
+            <a href="?page={{ registros.previous_page_number }}">anterior</a>
+        {% endif %}
+        <span class="current">
+            Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+        </span>
+        {% if registros.has_next %}
+            <a href="?page={{ registros.next_page_number }}">siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+<form action="{% url 'solicitantes:add_intermediario' %}" method="get">
+	{% csrf_token %}
+	<button type="submit" class="btn btn-primary btn-block">Agregar</button>
+</form>
+
+{% endblock content %}

@@ -1,0 +1,67 @@
+{% extends 'base_usuario.html' %}
+
+{% block content %}
+
+{% if "Activo" in estado %}
+<form class="form-horizontal" id="form_usuario" method="post">{% csrf_token %}
+    <fieldset>
+        <legend>{{ titulo }}</legend>
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="control-group error">
+                        <label class="control-label">{{ field.label }}</label> 
+                        <div class="controls">{{ field }}
+                            <span class="help-inline">
+                                {% for error in  field.errors %}{{ error }}{% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label> 
+                        <div class="controls">{{ field }}
+                            {% if field.help_text %}
+                                <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                            {% endif %}
+                            {% if field.required = True %}
+                                <p class="help-inline"><small>dsfdfs</small></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+    </fieldset>
+    <br/>
+    {% if user.is_authenticated and user.is_staff == True %}
+
+    {% else %}
+    <p>Responda la siguiente pregunta:</p>
+    <label for="number" class="title">{{ preg }}</label>
+    <input name="number" id="number" required="required"
+         pattern="{{resp}}" title="Responda la pregunta para demostrar que es humano." class="">
+    <br/>
+    {% endif %}
+    <br/>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
+    </div>
+<br/>
+
+    {% if "Guardado" in informacion %}
+        <script type="text/javascript">swal('Guardado!', 'El registro ha sido guardado satisfactoriamente', 'success');</script>
+    {% endif %}
+    {% if "Error" in informacion %}
+        <script type="text/javascript">swal('Error!', 'Verifique que los campos se encuentren bien diligenciados', 'error');</script>
+    {% endif %}
+</form>
+    
+
+{% else %}
+    <h1>Registro en linea temporalmente inactivo</h1><br/>
+    <p>Por disposición de la administración, la página se encuentra actualmente inhabilitada.</p>
+{% endif %}
+
+
+
+
+{% endblock content %}

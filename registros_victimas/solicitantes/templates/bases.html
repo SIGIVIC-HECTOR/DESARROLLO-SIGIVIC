@@ -1,0 +1,38 @@
+{% load staticfiles %}
+{% load templatesfiles %}
+<html>
+    <head>
+        <title>Registro de victimas</title>
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'sweetalert/dist/sweetalert.css' %}">
+        <link rel="stylesheet" href="{% static 'sweetalert/themes/twitter/twitter.css' %}">
+    </head> 
+    <body>
+        <div class="page-header">
+            <h1><a href="" class="panel-primario">REGISTRO DE VICTIMAS</a></h1>
+        </div>
+        <div class="panel panel-primary panel-primario">
+            <div class="panel-heading">Registros</div>
+            <div class="panel-body">
+                <div class="menu-izquierdo">
+                    <a href="#" class="list-group-item active">
+                        Menu
+                    </a>
+                    <a href="{% templates 'add_toma_declaracion' %}" class="list-group-item">agregar declaración</a>
+                    <a href="{% templates 'add_asociado_declarante' %}" class="list-group-item">agregar asociados</a>
+                    <a href="{% templates 'add_informacion_solicitante' %}" class="list-group-item">agregar datos del solicitante</a>
+                    <a href="{% templates 'lista_informacion_solicitante' %}" class="list-group-item">ver datos del solicitante</a>
+
+                </div>
+                <div class="contenido">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+</html>

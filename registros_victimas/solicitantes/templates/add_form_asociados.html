@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+ 
+<input id="reloadValue" type="hidden" name="reloadValue" value="" />
+<form class="form-horizontal" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>{{ titulo }}</legend>
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                        {% if field.required = True %}
+                            <p class="help-inline"><small>dsfdfs</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+       
+    </fieldset><br>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-block">Guardar Cambios</button>
+    </div>
+</form>
+
+
+<br/>
+
+ <div>
+    <form action="." method="POST">
+        <div style="width:100%; overflow: scroll; overflow-y: hidden;">
+        <legend>Beneficios:</legend>
+        <table class="table table-bordered table-hover tabla">
+            <ul>
+            <tr>
+               <th>Beneficio</th>
+               <th>Estado actual</th>
+               <th>Id beneficio del asociado</th>
+               <th colspan="2">Accion</th>
+            </tr>
+            
+            {% for i in beneficios %}
+                    <tr>
+                    {% for k in i %}
+                        <td>{{k}}</td>
+                        {% if k <= 1000000 %}
+                            <td><a class="glyphicon glyphicon-edit icon-align" title="Editar registro"  href="{% url 'solicitantes:update_beneficio_asociado' k asociado.id %}"></a></td>
+                            <td>
+                                <a style="align: center;" class="glyphicon glyphicon-trash icon-align" title="Eliminar registro" onClick="swal({ title: 'Realmente quiere eliminar el registro?', text: 'Una vez eliminado no se podrá recuperar', type: 'warning', showCancelButton: true, cancelButtonText: 'No borrar', confirmButtonColor: '#DD6B55', confirmButtonText: 'Si, borrar', closeOnConfirm: false }, function(){
+                                location.href='{% url 'solicitantes:delete_beneficio_asociado' k asociado.id %}';});"></a>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+
+                    </tr>
+                    {% empty %}
+                        vacío
+                    {% endfor %}
+            </ul>
+        </table>
+    </div>
+    </form>
+    <form action="{% url 'solicitantes:add_beneficio_asociado' asociado.id %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar Beneficio</button>
+    </form>
+</div>
+
+<br/>
+
+<div>
+    <form action="." method="POST">
+        <div style="width:100%; overflow: scroll; overflow-y: hidden;">
+        <legend>Hechos Victimizarios:</legend>
+        <table class="table table-bordered table-hover tabla">
+            <ul>
+            <tr>
+               <th>Hecho victimizario</th>
+               <th>Id hecho</th>
+               <th colspan="2">Accion</th>
+            </tr>
+            
+            {% for i in hechos %}
+                <tr>
+                    {% for k in i %}
+                        <td>{{ k }}</td>
+                        {% if k <= 1000000 %}
+                            <td><a class="glyphicon glyphicon-edit icon-align" title="Editar registro" href="{% url 'solicitantes:update_hecho_asociado' k asociado.id %}"></a></td>
+                            <td>
+                                <a style="align: center;" class="glyphicon glyphicon-trash icon-align" title="Eliminar registro" onClick="swal({ title: 'Realmente quiere eliminar el registro?', text: 'Una vez eliminado no se podrá recuperar', type: 'warning', showCancelButton: true, cancelButtonText: 'No borrar', confirmButtonColor: '#DD6B55', confirmButtonText: 'Si, borrar', closeOnConfirm: false }, function(){
+                                location.href='{% url 'solicitantes:delete_hecho_asociado' k asociado.id %}';});"></a>
+                            </td>
+                            
+                        {% endif %}
+                    {% endfor %}
+            {% empty %}
+                vacío
+            {% endfor %}
+                    </tr>
+            </ul>
+        </table>
+        </div>
+    </form>
+    <form action="{% url 'solicitantes:add_hecho_asociado' asociado.id %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar hecho victimizario</button>
+    </form>
+</div>
+
+<br/>
+
+<div>
+    <form action="." method="POST">
+        <div style="width:100%; overflow: scroll; overflow-y: hidden;">
+        <legend>Etnias:</legend>
+        <table class="table table-bordered table-hover tabla">
+            <ul>
+            <tr>
+               <th>Etnia</th>
+               <th>Id etnia del asociado</th>
+               <th colspan="2">Accion</th>
+            </tr>
+            
+            {% for i in etnias %}
+                <tr>
+                {% for k in i %}
+                    <td>{{k}}</td>
+                    {% if k <= 1000000 %}
+                        <td><a class="glyphicon glyphicon-edit icon-align" title="Editar registro" href="{% url 'solicitantes:update_etnia_asociado' k asociado.id %}"></a></td>
+                        <td>
+                            <a style="align: center;" class="glyphicon glyphicon-trash icon-align" title="Eliminar registro" onClick="swal({ title: 'Realmente quiere eliminar el registro?', text: 'Una vez eliminado no se podrá recuperar', type: 'warning', showCancelButton: true, cancelButtonText: 'No borrar', confirmButtonColor: '#DD6B55', confirmButtonText: 'Si, borrar', closeOnConfirm: false }, function(){
+                            location.href='{% url 'solicitantes:delete_etnia_asociado' k asociado.id %}';
+                            });"></sa>
+                        </td>
+                    {% endif %}
+                {% endfor %}
+
+                </tr>
+                {% empty %}
+                    vacío
+                {% endfor %}
+            </ul>
+        </table>
+    </div>
+    </form>
+    <form action="{% url 'solicitantes:add_etnia_asociado' asociado.id%}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar Etnia</button>
+    </form>
+</div>
+
+<br/>
+
+<div>
+    <form action="." method="POST">
+        <div style="width:100%; overflow: scroll; overflow-y: hidden;">
+        <legend>Discapacidades:</legend>
+        <table class="table table-bordered table-hover tabla">
+            <ul>
+            <tr>
+               <th>Discapacidad</td>
+               <th>Id discapacidad del asociado</td>
+               <th colspan="2">Accion</td>
+            </tr>
+            
+            {% for i in discapacidades %}
+                    <tr>
+                    {% for k in i %}
+                        <td>{{k}}</td>
+                        {% if k <= 1000000 %}
+                            <td><a class="glyphicon glyphicon-edit icon-align" title="Editar registro" href="{% url 'solicitantes:update_discapacidad_asociado' k asociado.id %}"></a></td>
+                            <td>
+                                <a style="align: center;" class="glyphicon glyphicon-trash icon-align" title="Eliminar registro" onClick="swal({ title: 'Realmente quiere eliminar el registro?', text: 'Una vez eliminado no se podrá recuperar', type: 'warning', showCancelButton: true, cancelButtonText: 'No borrar', confirmButtonColor: '#DD6B55', confirmButtonText: 'Si, borrar', closeOnConfirm: false }, function(){
+                                location.href='{% url 'solicitantes:delete_discapacidad_asociado' k asociado.id %}';});"></a>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+
+                    </tr>
+                    {% empty %}
+                        vacío
+                    {% endfor %}
+            </ul>
+        </table>
+        </div>
+    </form>
+    <form action="{% url 'solicitantes:add_discapacidad_asociado' asociado.id %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar Discapacidad</button>
+    </form>
+</div>
+
+
+{% endblock content %}
+

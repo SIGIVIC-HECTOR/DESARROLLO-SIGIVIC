@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form class="form-horizontal" method="post">{% csrf_token %}
+    <fieldset>
+
+    <legend>{{ titulo }}</legend>
+    <br>
+        <a class="btn-coll btn-block" data-toggle="collapse" data-target="#principales">  Datos principales</a>
+
+        <div id="principales" class="collapse">
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                        {% if field.required = True %}
+                            <p class="help-inline"><small>dsfdfs</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <br>
+        <a class="btn-coll btn-block" data-toggle="collapse" data-target="#adicionales">  Datos adicionales</a>
+
+        <div id="adicionales" class="collapse">
+        {% for field in form3 %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                        {% if field.required = True %}
+                            <p class="help-inline"><small>dsfdfs</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <br>
+
+        <a class="btn-coll btn-block" data-toggle="collapse" data-target="#procedimiento"> Verificación de procedimiento</a>
+
+        <div id="procedimiento" class="collapse">
+        {% for field in form2 %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label> 
+                    <div class="controls">{{ field }}
+                        {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                        {% if field.required = True %}
+                            <p class="help-inline"><small>dsfdfs</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </fieldset>
+
+    <div class="form-actions"><br>
+        <button type="submit" class="btn btn-primary btn-block">Guardar cambios</button>
+    </div>
+
+</form>
+
+
+<div>
+    <form action="." method="POST">
+        <div style="width:100%; overflow: scroll; overflow-y: hidden;">
+        <legend>Hechos Victimizarios:</legend>
+        <table class="table table-bordered table-hover tabla">
+            <ul>
+            <tr>
+               <th>Hecho victimizario</th>
+               <th>Cantidad de sucesos</th>
+               <th colspan="2">Accion</th>
+            </tr>
+            {% for i in hechos %}
+                <tr>
+                    {% for k in i %}
+                        {% if k <= 1000000 %}
+                            <td><a class="glyphicon glyphicon-edit icon-align" title="Editar registro" href="{% url 'solicitantes:update_hecho_declarante' k declarante.id %}"></a></td>
+                            <td>
+                            <a style="align: center;" class="glyphicon glyphicon-trash icon-align" title="Eliminar registro" onClick="swal({ title: 'Realmente quiere eliminar el registro?', text: 'Una vez eliminado no se podrá recuperar', type: 'warning', showCancelButton: true, cancelButtonText: 'No borrar', confirmButtonColor: '#DD6B55', confirmButtonText: 'Si, borrar', closeOnConfirm: false }, function(){
+                            location.href='{% url 'solicitantes:delete_hecho_declarante' k declarante.id %}';
+                            });"></a>
+                            </td>
+                        {% else %}
+                            <td>{{ k }}</td>
+                        {% endif %}
+                    {% endfor %}
+            {% empty %}
+                vacío
+            {% endfor %}
+                    </tr>
+            </ul>
+        </table>
+        </div>
+    </form>
+    <form action="{% url 'solicitantes:add_hecho_declarante' declarante.id %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar hecho victimizario</button>
+    </form>
+</div>
+
+{% if "Guardado" in informacion %}
+    <script type="text/javascript">swal('Guardado!', 'El registro ha sido guardado satisfactoriamente', 'success');</script>
+{% endif %}
+{% if "Error" in informacion %}
+    <script type="text/javascript">swal('Error!', 'Verifique que los campos se encuentren bien diligenciados', 'error');</script>
+{% endif %}
+
+{% endblock content %}
+

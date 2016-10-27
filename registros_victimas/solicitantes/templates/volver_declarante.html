@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form class="form-horizontal" action="{% url 'solicitantes:update_declarante' id %}" method="get">
+    {% csrf_token %}
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-block">Volver a la declaración</button>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br>
+    </div>
+    <script type="text/javascript">swal('Hecho');</script>
+</form>
+
+{% if "Guardado" in informacion %}
+    <script type="text/javascript">
+    swal('Guardado!', 'El registro ha sido guardado satisfactoriamente', 'success');
+    </script>
+{% endif %}
+{% if "Eliminado" in informacion %}
+    <script type="text/javascript">
+    swal('Eliminado!', 'El registro se ha borrado satisfactoriamente', 'sucess');
+    </script>
+{% endif %}
+{% if "Error" in informacion %}
+    <script type="text/javascript">
+    swal('Error!', 'Verifique que los campos se encuentren bien diligenciados', 'error');
+    </script>
+{% endif %}
+
+{% endblock content %}
+

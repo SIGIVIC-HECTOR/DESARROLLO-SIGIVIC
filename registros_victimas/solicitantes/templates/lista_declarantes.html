@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<h3>Declarantes</h3>
+		<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+		<table class="table table-bordered table-hover table-striped table-reflow tabla">
+	  		<ul>
+	  		<tr>
+				<th>Código</th>
+				<th>Primer nombre</th>
+				<th>Demás nombres</th>
+				<th>Primer apellido</th>
+				<th>Segundo apellido</th>
+				<th>Número de documento</th>
+				<th colspan="2">Acciones</th>
+			</tr>
+		{% for i in registros %}
+		<tr>
+			<td>{{i.codigo_declaracion}}</td>
+			<td>{{i.primer_nombre_declarante}}</td>
+			<td>{{i.demas_nombres_declarante}}</td>
+			<td>{{i.primer_apellido_declarante}}</td>
+			<td>{{i.segundo_apellido_declarante}}</td>
+			<td>{{i.numero_documento_declarante}}</td>
+			<td><a class="glyphicon glyphicon-list-alt icon-align" title="Ver asociados del declarante" href="{% url 'solicitantes:lista_asociados_declarante' i.id %}"></a></td>
+			<td><a class="glyphicon glyphicon-edit icon-align" title="Ver registro" href="{% url 'solicitantes:update_declarante' i.id %}"></a></td>
+		</td>
+		</td>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+
+	</table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if registros.has_previous %}
+            <a href="?page={{ registros.previous_page_number }}">anterior</a>
+        {% endif %}
+        <span class="current">
+            Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+        </span>
+        {% if registros.has_next %}
+            <a href="?page={{ registros.next_page_number }}">siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+<form action="{% url 'solicitantes:add_declaracion' %}" method="get">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+</form>
+
+{% endblock content %}

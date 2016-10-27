@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<form action="." method="POST">
+		<legend>Asociados de {{declarante.primer_nombre_declarante}} {{declarante.primer_apellido_declarante}}</legend>
+		<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+		<table class="table table-bordered table-hover table-striped table-reflow tabla">
+	  		<ul>
+	  		<tr>
+				<th>ID</th>
+				<th>Primer nombre</th>
+				<th>Demás nombres</th>
+				<th>Primer apellido</th>
+				<th>Segundo apellido</th>
+				<th>Número de documento</th>
+				<th>Acciones</th>
+			</tr>
+			{% for i in asociados %}
+			<tr>
+				<td>{{i.id}}</td>
+				<td>{{i.primer_nombre_asociado}}</td>
+				<td>{{i.demas_nombres_asociado}}</td>
+				<td>{{i.primer_apellido_asociado}}</td>
+				<td>{{i.segundo_apellido_asociado}}</td>
+				<td>{{i.numero_documento_asociado}}</td>
+				<td><a class="glyphicon glyphicon-edit icon-align" title="Ver registro"  href="{% url 'solicitantes:update_asociado_declarante' i.id %}"></a></td>
+			</tr>
+			{% empty %}
+				vacío
+			{% endfor %}
+			</ul>
+		</table>
+	</div>
+	</form>
+</div>
+<form action="{% url 'solicitantes:add_asociado_declarante' %}" method="get">
+	{% csrf_token %}
+	<button type="submit" class="btn btn-primary btn-block">Agregar</button>
+</form>
+
+{% endblock content %}
