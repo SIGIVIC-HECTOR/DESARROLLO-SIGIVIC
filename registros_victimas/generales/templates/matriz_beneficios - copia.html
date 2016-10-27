@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+  			{% csrf_token %}
+			{{ form.as_p }}
+		</ul>
+	</table>
+    <div class="btn-agregar btn">Agregar</div>
+</div>
+{{ info }}
+todos
+{{ sumx }}
+
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in vida %}
+		<tr>
+			<td>{{i.id}} </td>
+			<td>{{i}}</td>
+			<td>{{i.derecho_id}}</td>
+			{% for j in derechos %}
+				{% if j.id = i.derecho_id %}
+				<td>{{j.nombre_derecho}}</td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+</div>
+{{ numDerecho }}
+{{ vida }}...
+{{ idBeneficiosAsociadosVida }}...
+{{ idAsociadosVida }}...
+{{ idHechosAsociadosVida }}
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in libertad %}
+		<tr>
+			<td>{{i.id}} </td>
+			<td>{{i}}</td>
+			<td>{{i.derecho_id}}</td>
+			{% for j in derechos %}
+				{% if j.id = i.derecho_id %}
+				<td>{{j.nombre_derecho}}</td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+    <div class="btn-agregar btn">Agregar</div>
+</div>
+
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in beneficios %}
+		
+		<tr>
+			<td>{{i.id}} </td>
+			<td>{{i}}</td>
+			<td>{{i.derecho_id}}</td>
+			{% for j in derechos %}
+				{% if j.id = i.derecho_id %}
+				<td>{{j.nombre_derecho}}</td>
+				{% endif %}
+			{% endfor %}
+		</tr>
+		{% empty %}
+			vacío
+		
+		{% endfor %}
+		</ul>
+	</table>
+    <div class="btn-agregar btn">Agregar</div>
+</div>
+
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in beneficiosAsociados %}
+		
+		<tr>
+			<td>{{i.id}} </td>
+			<td>{{i.estado_actual_beneficio}}</td>
+			{% for j in asociados %}
+				{% if j.id = i.asociado_id %}
+					<td>{{j.primer_nombre_asociado}} {{j.primer_apellido_asociado}}</td>
+				{% endif %}
+			{% endfor %}
+
+			{% for k in beneficios %}
+				{% if k.id = i.beneficio_id %}
+				<td>{{k.nombre_programa}}</td>
+				
+					{% for k2 in derechos %}
+						{% if k2.id = k.derecho_id %}
+							<td>{{k2.nombre_derecho}}</td>
+						{% endif %}
+					{% endfor %}	
+				{% endif %}
+			{% endfor %}
+
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+    <div class="btn-agregar btn">Agregar</div>
+</div>
+{% endblock content %}

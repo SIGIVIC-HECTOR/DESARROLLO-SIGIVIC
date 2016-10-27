@@ -1,0 +1,371 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <meta name="tipo_contenido"  content="text/html;" http-equiv="content-type" charset="utf-8">
+        <title>Registro de victimas</title>
+        <!--ultimos agregados-->
+        <link href="https://code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.css" rel="stylesheet" media="screen">
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet">
+<script>
+    $('#example').dataTable();
+</script>
+
+
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <!--plugins para las alertas-->
+        <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/dist/sweetalert.css' %}">
+        <script src="{% static 'sweetalert/dist/sweetalert.min.js' %}"></script> 
+        <!--plugins para los desplegables-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!--plugins para las tablas-->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/table.js' %}"></script>
+        <script type="text/javascript" src="../static/js/table.js"></script>
+        
+    </head> 
+    <body class="margenes">
+        <ul class="nav navbar-nav navbar-right" style="margin-right: 5px">
+              
+        </ul>
+
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="#">SIGIVIC</a>
+            </div>
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Inicio</a></li>
+              {% if user.is_authenticated and user.is_staff == True %}
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Herramientas
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'generales:estado_clientes_view' %}">Atención en línea</a></li>
+                  <li><a href="#">Herr 2</a></li>
+                  <li><a href="#">Herr 3</a></li> 
+                </ul>
+              </li>
+              <li><a class="" href="#">Ayuda</a></li> 
+              {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+              {% if user.is_authenticated %}
+                <li><a href="{% url 'generales:index_view' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+                <li><a href="http://localhost:8000/generales/logout_view"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+              {% else %}
+                <li><a href="http://localhost:8000/generales/login_view"><span class="glyphicon glyphicon-log-in"></span> Ingresar</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+
+        {% if user.is_authenticated and user.is_staff == True %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">Administrador</div>
+            <div class="panel-body">
+                  
+                <div class="menu-izquierdo">
+                    <a href="" class="list-group-item active glyphicon glyphicon-th-large">
+                        Menu
+                    </a>
+                    <li class="dropdown list-group-item">
+                        <a class="dropdown-toggle glyphicon glyphicon-list" data-toggle="dropdown" title="Listas de registros" href="#"> Listas
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <a href="http://localhost:8000/beneficios/lista_beneficios/" class="list-group-item">Beneficios</a>
+                            <a href="{% url 'solicitantes:lista_solicitantes' %}" class="list-group-item">Solicitantes</a>
+                            <a href="{% url 'solicitantes:lista_declarantes' %}" class="list-group-item">Declarantes registrados</a>
+                            <a href="{% url 'solicitantes:lista_intermediarios' %}" class="list-group-item">Intermediarios registrados</a>
+                            <a href="{% url 'generales:lista_lugares_declaracion' %}" class="list-group-item">Lugares de declaración</a>
+                        </ul>
+                      </li>
+                    <li class="dropdown list-group-item">
+                        <a class="dropdown-toggle glyphicon glyphicon-plus" data-toggle="dropdown" title="Agregar registros" href="#"> Agregar
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <a href="{% url 'beneficios:add_beneficio' %}" class="list-group-item">Beneficio</a>
+                            <a href="{% url 'solicitantes:add_informacion_solicitante' %}" class="list-group-item">Solicitante</a>
+                            <a href="{% url 'solicitantes:add_declaracion' %}" class="list-group-item">Declaracion</a>
+                            <a href="{% url 'solicitantes:add_asociado_declarante' %}" class="list-group-item">Asociado</a>
+                            <a href="{% url 'generales:add_entidad_atencion' %}" class="list-group-item">Entidad de atención</a>
+                            <a href="{% url 'solicitantes:add_intermediario' %}" class="list-group-item">Intermediario</a>
+                            <a href="{% url 'solicitantes:add_tipo_intermediario' %}" class="list-group-item">Tipo de intermediario</a>
+                            <a href="{% url 'generales:add_lugar_declaracion' %}" class="list-group-item">Lugar de declaración</a>
+                            <a href="{% url 'solicitantes:add_correccion_declaracion' %}" class="list-group-item">Corrección a una declaración</a>
+                            
+                        </ul>
+                      </li>
+                    
+                    <a href="{% url 'generales:matriz' %}" class="list-group-item glyphicon glyphicon-th" title="Matriz de beneficios"> Matriz de beneficios</a>
+                    
+                </div>
+
+                <div class="contenido">
+                    {% include '_messages.html' %}
+                    {% block content %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+<table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+ 
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+ 
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Garrett Winters</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>63</td>
+                <td>2011/07/25</td>
+                <td>$170,750</td>
+            </tr>
+            <tr>
+                <td>Ashton Cox</td>
+                <td>Junior Technical Author</td>
+                <td>San Francisco</td>
+                <td>66</td>
+                <td>2009/01/12</td>
+                <td>$86,000</td>
+            </tr>
+            <tr>
+                <td>Cedric Kelly</td>
+                <td>Senior Javascript Developer</td>
+                <td>Edinburgh</td>
+                <td>22</td>
+                <td>2012/03/29</td>
+                <td>$433,060</td>
+            </tr>
+            <tr>
+                <td>Airi Satou</td>
+                <td>Accountant</td>
+                <td>Tokyo</td>
+                <td>33</td>
+                <td>2008/11/28</td>
+                <td>$162,700</td>
+            </tr>
+            <tr>
+                <td>Brielle Williamson</td>
+                <td>Integration Specialist</td>
+                <td>New York</td>
+                <td>61</td>
+                <td>2012/12/02</td>
+                <td>$372,000</td>
+            </tr>
+            <tr>
+                <td>Herrod Chandler</td>
+                <td>Sales Assistant</td>
+                <td>San Francisco</td>
+                <td>59</td>
+                <td>2012/08/06</td>
+                <td>$137,500</td>
+            </tr>
+            <tr>
+                <td>Rhona Davidson</td>
+                <td>Integration Specialist</td>
+                <td>Tokyo</td>
+                <td>55</td>
+                <td>2010/10/14</td>
+                <td>$327,900</td>
+            </tr>
+            <tr>
+                <td>Colleen Hurst</td>
+                <td>Javascript Developer</td>
+                <td>San Francisco</td>
+                <td>39</td>
+                <td>2009/09/15</td>
+                <td>$205,500</td>
+            </tr>
+            <tr>
+                <td>Sonya Frost</td>
+                <td>Software Engineer</td>
+                <td>Edinburgh</td>
+                <td>23</td>
+                <td>2008/12/13</td>
+                <td>$103,600</td>
+            </tr>
+            <tr>
+                <td>Jena Gaines</td>
+                <td>Office Manager</td>
+                <td>London</td>
+                <td>30</td>
+                <td>2008/12/19</td>
+                <td>$90,560</td>
+            </tr>
+            <tr>
+                <td>Quinn Flynn</td>
+                <td>Support Lead</td>
+                <td>Edinburgh</td>
+                <td>22</td>
+                <td>2013/03/03</td>
+                <td>$342,000</td>
+            </tr>
+            <tr>
+                <td>Charde Marshall</td>
+                <td>Regional Director</td>
+                <td>San Francisco</td>
+                <td>36</td>
+                <td>2008/10/16</td>
+                <td>$470,600</td>
+            </tr>
+            <tr>
+                <td>Haley Kennedy</td>
+                <td>Senior Marketing Designer</td>
+                <td>London</td>
+                <td>43</td>
+                <td>2012/12/18</td>
+                <td>$313,500</td>
+            </tr>
+            <tr>
+                <td>Tatyana Fitzpatrick</td>
+                <td>Regional Director</td>
+                <td>London</td>
+                <td>19</td>
+                <td>2010/03/17</td>
+                <td>$385,750</td>
+            </tr>
+            <tr>
+                <td>Michael Silva</td>
+                <td>Marketing Designer</td>
+                <td>London</td>
+                <td>66</td>
+                <td>2012/11/27</td>
+                <td>$198,500</td>
+            </tr>
+            <tr>
+                <td>Paul Byrd</td>
+                <td>Chief Financial Officer (CFO)</td>
+                <td>New York</td>
+                <td>64</td>
+                <td>2010/06/09</td>
+                <td>$725,000</td>
+            </tr>
+            <tr>
+                <td>Gloria Little</td>
+                <td>Systems Administrator</td>
+                <td>New York</td>
+                <td>59</td>
+                <td>2009/04/10</td>
+                <td>$237,500</td>
+            </tr>
+            <tr>
+                <td>Bradley Greer</td>
+                <td>Software Engineer</td>
+                <td>London</td>
+                <td>41</td>
+                <td>2012/10/13</td>
+                <td>$132,000</td>
+            </tr>
+            <tr>
+                <td>Dai Rios</td>
+                <td>Personnel Lead</td>
+                <td>Edinburgh</td>
+                <td>35</td>
+                <td>2012/09/26</td>
+                <td>$217,500</td>
+            </tr>
+            <tr>
+                <td>Jenette Caldwell</td>
+                <td>Development Lead</td>
+                <td>New York</td>
+                <td>30</td>
+                <td>2011/09/03</td>
+                <td>$345,000</td>
+            </tr>
+            <tr>
+                <td>Yuri Berry</td>
+                <td>Chief Marketing Officer (CMO)</td>
+                <td>New York</td>
+                <td>40</td>
+                <td>2009/06/25</td>
+                <td>$675,000</td>
+            </tr>
+            <tr>
+                <td>Caesar Vance</td>
+                <td>Pre-Sales Support</td>
+                <td>New York</td>
+                <td>21</td>
+                <td>2011/12/12</td>
+                <td>$106,450</td>
+            </tr>
+            <tr>
+                <td>Doris Wilder</td>
+                <td>Sales Assistant</td>
+                <td>Sidney</td>
+                <td>23</td>
+                <td>2010/09/20</td>
+                <td>$85,600</td>
+            </tr>
+            <tr>
+                <td>Angelica Ramos</td>
+                <td>Chief Executive Officer (CEO)</td>
+                <td>London</td>
+                <td>47</td>
+                <td>2009/10/09</td>
+                <td>$1,200,000</td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+
+   
+
+
+    <link href="vendors/datatables/dataTables.bootstrap.css" rel="stylesheet" media="screen">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- jQuery UI -->
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="vendors/datatables/js/jquery.dataTables.min.js"></script>
+
+    <script src="vendors/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="js/custom.js"></script>
+    <script>
+    $('#example').dataTable();
+</script>
+
+    </body>
+</html>

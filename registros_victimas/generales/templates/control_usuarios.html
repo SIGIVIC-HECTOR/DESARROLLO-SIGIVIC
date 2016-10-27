@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}control de usuarios{% endblock title %}
+
+{% block content %}
+	{% if "Activo" in estado %}
+		<legend>Actualmente se encuentra activo</legend><br/>
+		<form action="{% url 'generales:estado_clientes_view' %}" method="POST">
+	    	<input type="submit" id="image-habilitado" text="Habilitado" value=""></input><br/><br/>
+			{% csrf_token %}
+	    	Cualquier usuario puede realizar una solicitud en línea, haga click en la imágen si desea inhabilitar esta función.
+	    </form>
+	{% else %}
+		<legend>Actualmente se encuentra inactivo</legend><br/>
+		<form action="{% url 'generales:estado_clientes_view' %}" method="POST">
+			<input type="submit" id="image-inhabilitado" text="Inhabilitado" value=""></input><br/><br/>
+			{% csrf_token %}
+	    	Los usuarios no pueden hacer solicitudes de declaración en línea, haga click en la imágen para permitir a los usuarios realizar solicitudes.
+	    </form>
+	{% endif %}
+{% endblock content %}

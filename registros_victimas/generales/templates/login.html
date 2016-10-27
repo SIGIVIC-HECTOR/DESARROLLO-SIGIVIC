@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Login</title>
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/dist/sweetalert.css' %}">
+        <script src="{% static 'sweetalert/dist/sweetalert.min.js' %}"></script> 
+        
+    </head> 
+    <body>
+    <div class="row">
+            
+        <div class="col-md-4 col-md-offset-4">
+            {% if mensaje %}
+                <script>
+                    swal('Error!', '{{ mensaje }}', 'error');
+                </script>
+            {% endif %}
+        </div>
+    
+        <div class="wrapper">
+            <div class="page-header logo"></div>
+            <form action="" method="post" name="Login_Form" class="form-signin">  
+                {% csrf_token %}     
+                <h3 class="form-signin-heading">Ingrese sus datos por favor</h3>
+                    <input type="text" id="username" name="username" class="form-control" value="{{ username }}" placeholder="Usuario"> 
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña">          
+                 <br>
+                  <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Login" type="Submit">Entrar</button>          
+            </form>   
+            <hr class="colorgraph">
+            <form action="{% url 'solicitantes:add_informacion_solicitante' %}" method="get" name="solicitud" class="">  
+            {% csrf_token %}     
+            <h3 class="form-signin-heading">Hacer una solicitud</h3>
+                       
+             
+              <button class="btn btn-lg btn-primary btn-block"  name="Submit" value="Solicitud" type="Submit">Entrar como invitado</button>            
+        </form>         
+        </div>
+    </div>
+</body>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in lugares %}
+		<tr>
+			<td>{{i.id}}</td>
+			<td>{{i.departamento_declaracion}}</td>
+			<td>{{i.municipio_declaracion}}</td>
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+    <form action="{% url 'generales:add_lugar_declaracion' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+    </form>
+</div>
+
+{% endblock content %}

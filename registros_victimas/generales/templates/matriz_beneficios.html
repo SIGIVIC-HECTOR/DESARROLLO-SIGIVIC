@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Matriz de Beneficios</h1>
+
+    <form action="{% url 'generales:matriz' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-exportar">Exportar</button>
+    </form>
+<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+    <table class="table table-bordered table-hover table-striped table-reflow tabla" style="width:2000px; text-align: center">
+            
+            <tr>
+                <td class="col-azul" rowspan="3">Derechos</td>
+                <td class="col-negro" rowspan="3">Condiciones de la problematica territorial</td>
+                <td class="col-azul" rowspan="3">Nombre del programa/proyecto y/o actividad</td>
+                <td class="col-negro" rowspan="3">Estado de gestión del programa/proyecto y/o actividad</td>
+                <td class="col-azul" rowspan="3">Meta del programa y/o proyecto</td>
+                <td class="col-negro" rowspan="3">Avance de la meta del programa y/o proyecto</td>
+                <td class="col-azul" rowspan="3">Indicador (es)</td>
+                <td class="col-negro" colspan="3" rowspan="2">Número de personas atendidas</td>
+                <td class="col-azul" colspan="9" rowspan="2">Número de personas víctimas de desplazamiento forzado atendidas</td>
+                <td class="col-azul" colspan="9" rowspan="2">Número de personas víctimas de hechos diferentes a desplazamiento forzado atendidas</td>
+                <td class="col-azul" colspan="4" rowspan="2">NACIÓN</td>
+                <td class="col-azul" colspan="3" rowspan="2">DEPARTAMENTO</td>
+                <td class="col-azul" colspan="6" rowspan="2">MUNICIPIO</td>
+                <td class="col-azul" colspan="4" rowspan="2">OTROS</td>
+                <td class="col-negro" rowspan="2">TOTAL</td>
+                <td class="col-negro" colspan="5">Participación en el Desarrollo de cada Programa / Proyecto / Actividad</td>
+            </tr>
+            <tr>
+                <td class="col-negro">Nacional</td>
+                <td class="col-negro">Departamental</td>
+                <td class="col-negro">Municipal</td>
+                <td class="col-negro">Cooperación Internacional</td>
+                <td class="col-negro">Otros</td>
+            </tr>
+            <tr>
+                <ul>
+
+  					{% for j in titulos %}
+  					{% if "  " in j %}
+					<td class="col-azul">{{j}}</td>
+					{% else %}
+					<td class="col-negro">{{j}}</td>
+					{% endif %}
+					{% endfor %}
+
+					{% for i in datosBeneficio %}
+					<tr>
+					{% for k in i %}
+					<td>{{k}}</td>
+					{% endfor %}
+					</tr>
+					{% empty %}
+						vacío
+					{% endfor %}
+				</ul>
+            </tr>
+    </table>
+</div>
+
+
+{% endblock content %}

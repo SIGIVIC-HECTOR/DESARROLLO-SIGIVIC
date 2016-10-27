@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+	<table class="table table-bordered table-hover tabla">
+  		<h3>{{ titulo }}</h3>
+  		<tr>
+			<th>ID</th>
+			<th>Declaración</th>
+			<th>Tipo de documento</th>
+			<th>Nombre</th>
+			<th>Dirección</th>
+			<th>Descripción</th>
+			<th>Estado de revisión</th>
+			<th>Acciones</th>
+		</tr>
+		{% for i in registros %}
+		<tr>
+			<td>{{i.id}}</td>
+			<td>{{i.declaracion}}</td>
+			<td>{{i.tipo_documento}}</td>
+			<td>{{i.nombre}}</td>
+			<td>{{i.direccion}}</td>
+			<td>{{i.descripcion}}</td>
+			<td>{{i.estado_revision}}</td>
+			<td><a class="glyphicon glyphicon-edit icon-align" title="Ver registro" href="{% url 'solicitantes:update_informacion_solicitante' i.id %}"></a></td>
+		</td>
+		</td>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if registros.has_previous %}
+            <a href="?page={{ registros.previous_page_number }}">anterior</a>
+        {% endif %}
+        <span class="current">
+            Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+        </span>
+        {% if registros.has_next %}
+            <a href="?page={{ registros.next_page_number }}">siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock content %}

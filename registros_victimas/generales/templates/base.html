@@ -1,0 +1,119 @@
+{% load staticfiles %}
+<html>
+  <head>
+      <meta name="tipo_contenido"  content="text/html;" http-equiv="content-type" charset="utf-8">
+      <title>Registro de victimas</title>
+
+      <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap-theme.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/base.css' %}">
+      <!--plugins para las alertas-->
+      <link rel="stylesheet" type="text/css" href="{% static 'sweetalert/dist/sweetalert.css' %}">
+      <script src="{% static 'sweetalert/dist/sweetalert.min.js' %}"></script> 
+      <!--plugins para los desplegables-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <!--plugins para las tablas-->
+      <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+      <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+      <!--<script type="text/javascript" src="{% static 'js/table.js' %}"></script>-->
+      <script type="text/javascript" src="../static/js/table.js"></script>
+      
+  </head> 
+  <body class="margenes">
+    <div class="">
+      <img class="img-responsive superior" alt="">
+    </div>
+
+    <ul class="nav navbar-nav navbar-right" style="margin-right: 5px">
+          
+    </ul>
+
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">SIGIVIC</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Inicio</a></li>
+          {% if user.is_authenticated and user.is_staff == True %}
+          <li class="dropdown">
+            <a class="dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" href="#"> Funciones
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a class="glyphicon glyphicon-eye-close" href="{% url 'generales:estado_clientes_view' %}"> Atención en línea</a></li>
+              <li><a href="{% url 'generales:matriz' %}" class="glyphicon glyphicon-th" title="Matriz de beneficios"> Matriz de beneficios</a></li>
+            <li><a href="{% url 'generales:notificaciones' %}" class="glyphicon glyphicon-alert" title="Matriz de beneficios"> Notificaciones</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle glyphicon glyphicon-list" data-toggle="dropdown" title="Listas de registros" href="#"> Listas
+                    <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="http://localhost:8000/beneficios/lista_beneficios/">Beneficios</a></li> 
+              <li><a href="{% url 'solicitantes:lista_solicitantes' %}">Solicitantes</a></li> 
+              <li><a href="{% url 'solicitantes:lista_declarantes' %}">Declarantes registrados</a></li> 
+              <li><a href="{% url 'solicitantes:lista_intermediarios' %}">Intermediarios registrados</a></li> 
+              <li><a href="{% url 'generales:lista_lugares_declaracion' %}">Lugares de declaración</a></li> 
+            </ul>
+          </li>
+
+          <li class="dropdown">
+            <a class="dropdown-toggle glyphicon glyphicon-plus" data-toggle="dropdown" title="Agregar registros" href="#"> Agregar
+              <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url 'beneficios:add_beneficio' %}">Beneficio</a></li>
+              <li><a href="{% url 'solicitantes:add_informacion_solicitante' %}">Solicitante</a></li>
+              <li><a href="{% url 'solicitantes:add_declaracion' %}">Declaracion</a></li>
+              <li><a href="{% url 'solicitantes:add_asociado_declarante' %}">Asociado</a></li>
+              <li><a href="{% url 'generales:add_entidad_atencion' %}">Entidad de atención</a></li>
+              <li><a href="{% url 'solicitantes:add_intermediario' %}">Intermediario</a></li>
+              <li><a href="{% url 'solicitantes:add_tipo_intermediario' %}">Tipo de intermediario</a></li>
+              <li><a href="{% url 'generales:add_lugar_declaracion' %}">Lugar de declaración</a></li>
+              <li><a href="{% url 'solicitantes:add_correccion_declaracion' %}">Corrección a una declaración</a></li> 
+            </ul>
+          </li>
+
+          <li><a class="glyphicon glyphicon-exclamation-sign" href="{% url 'generales:info' %}"> Información</a></li> 
+          {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'generales:index_view' %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+            <li><a href="http://localhost:8000/generales/logout_view"><span class="glyphicon glyphicon-log-out"></span> Salir</a></li>
+          {% else %}
+            <li><a href="http://localhost:8000/generales/login_view"><span class="glyphicon glyphicon-log-in"></span> Ingresar</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    {% if user.is_authenticated and user.is_staff == True %}
+    <div class="panel panel-primary">
+      <div class="panel-head">Administrador</div>
+      <div class="panel-body">
+
+        <div class="contenido">
+            {% include '_messages.html' %}
+            {% block content %}
+            
+            {% endblock %}
+        </div>
+
+      </div>
+    </div>
+    {% endif %}
+
+  </body>
+   
+        
+
+    
+    
+  </div>
+  <footer class="footer">
+    <p class="navbar-text pull-left">© 2016 - SIGIVIC, Todos los derechos reservados</p>
+  </footer>
+</html>

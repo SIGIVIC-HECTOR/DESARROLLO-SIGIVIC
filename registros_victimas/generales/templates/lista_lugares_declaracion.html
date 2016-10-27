@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<table class="table table-bordered table-hover tabla">
+  		<ul>
+  		<legend>Lugares de declaración</legend>
+  		<tr>
+			<th>ID</th>
+			<th>Departamento</th>
+			<th>Municipio</th>
+		</tr>
+		{% for i in registros %}
+		<tr>
+			<td>{{i.id}}</td>
+			<td>{{i.departamento_declaracion}}</td>
+			<td>{{i.municipio_declaracion}}</td>
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if registros.has_previous %}
+            <a href="?page={{ registros.previous_page_number }}">anterior</a>
+        {% endif %}
+        <span class="current">
+            Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+        </span>
+        {% if registros.has_next %}
+            <a href="?page={{ registros.next_page_number }}">siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+
+
+
+    <form action="{% url 'generales:add_lugar_declaracion' %}" method="get">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block">Agregar</button>
+    </form>
+</div>
+
+{% endblock content %}

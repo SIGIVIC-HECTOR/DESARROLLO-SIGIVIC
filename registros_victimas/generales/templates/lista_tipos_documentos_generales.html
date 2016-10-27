@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<table class="table table-bordered table-hover">
+  		<ul>
+		{% for i in tipos_documentos %}
+		<tr>
+			<td>documento: </td>
+			<td>{{i}}</td>
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+	<form action="{% url 'generales:add_tipo_documento' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </form>
+
+
+
+    
+    
+</div>
+
+{% endblock content %}

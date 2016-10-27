@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h3>Notificaciones de solicitantes</h3><br>
+	<form action="{% url 'generales:lista_notificaciones' 1 %}" method="get">
+        {% csrf_token %}
+        <button type="submit" title="Ver registros" class="alert alert-success glyphicon glyphicon-eye-open"> Solicitantes Atendidos ({{ atend }})</button>
+    </form>
+
+    <form action="{% url 'generales:lista_notificaciones' 3 %}" method="get">
+        {% csrf_token %}
+        <button type="submit" title="Ver registros" class="alert alert-warning glyphicon glyphicon-eye-open"> Solicitantes En Revisión ({{ revis }})</button>
+    </form>
+		
+    <form action="{% url 'generales:lista_notificaciones' 2 %}" method="get">
+        {% csrf_token %}
+        <button type="submit" title="Ver registros" class="alert alert-danger glyphicon glyphicon-eye-open"> Solicitantes Pendientes ({{ pend }})</button>
+    </form>
+
+
+{% endblock content %}
