@@ -108,6 +108,11 @@
 {% if "Error" in informacion %}
     <script type="text/javascript">swal('Error!', 'Verifique que los campos se encuentren bien diligenciados', 'error');</script>
 {% endif %}
+{% if "DateError" in informacion %}
+    <script type="text/javascript">
+    swal('Error!', 'Los formatos de fecha son inválidos, el formato correcto es "dd-mm-aaaa"', 'error');
+    </script>
+{% endif %}
 
 {% endblock content %}
 
