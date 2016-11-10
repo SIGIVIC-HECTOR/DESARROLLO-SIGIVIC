@@ -1,4 +1,7 @@
+# -*- coding: 850 -*-
 from django.conf.urls import include, url
+
+"""Cada url crea una nueva dirección en el sitio a partir de la dirección base solicitantes"""
 
 urlpatterns = [
 	url(r'^add_informacion_solicitante/$', 'solicitantes.views.add_informacion_solicitante', name='add_informacion_solicitante'),

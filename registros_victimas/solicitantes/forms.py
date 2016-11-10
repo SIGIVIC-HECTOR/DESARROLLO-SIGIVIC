@@ -7,6 +7,11 @@ import datetime
 import django.core.validators
 from django.conf.global_settings import SHORT_DATE_FORMAT
 
+"""Las clases form estructuran el formulario que se presentará al usuario a partir de la entidad de la base de datos que se requiera instanciar,
+se construye la clase meta donde se tiene el model (modelo o entidad de la base de datos), fields(los campos de la entidad de la bd que serán 
+llamados), labels(los campos llamados y sus respectivas etiquetas a presentar al usuario) y widgets(los campos llamados y el tipo de componente
+que será usado para diligenciar cada campo como tipo campo de texto, cuadro de texto, numérico, email, desplegable, etc.)"""
+
 
 class addInformacionSolicitanteForm(forms.ModelForm):#formulario para el cliente
 
@@ -135,7 +140,7 @@ class asociadoForm(forms.ModelForm):
             'fecha_nacimiento_asociado': forms.DateInput(format=('%d-%m-%Y'), attrs={'class':'myDateClass', 'placeholder':'ej. 21-01-1990'}),
             'mujer_cabeza_familia': forms.Select(attrs={'class': 'form-control'}, choices=SN),
             'gestante_lactante': forms.Select(attrs={'class': 'form-control'}, choices=SN),
-            'estado_atencion_asociado': forms.Textarea(attrs={'class': 'form-control'}),
+            'estado_atencion_asociado': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -200,6 +205,7 @@ class declaracionForm(forms.ModelForm):
         SN = (('SI', 'SI'), ('NO', 'NO'))
         model = TomaDeclaracion
         fields = [
+            'codigo_declaracion',
             'lugar_declaracion',
             'entidad',
             'tipo_documento',
@@ -235,6 +241,7 @@ class declaracionForm(forms.ModelForm):
             'estado_atencion_declarador',
         ]
         labels = {
+            'codigo_declaracion':'Código de la declaración (*)',
             'lugar_declaracion': 'Lugar de declaración (*)',
             'entidad': 'Entidad de atención',
             'tipo_documento': 'Tipo de documento (*)',
@@ -270,6 +277,7 @@ class declaracionForm(forms.ModelForm):
             'estado_atencion_declarador': 'Estado de atención del declarador (*)',
         }
         widgets = {
+            'codigo_declaracion': forms.NumberInput(attrs={'class': 'form-control'}),
             'lugar_declaracion': forms.Select(attrs={'class': 'form-control'}),
             'entidad': forms.Select(attrs={'class': 'form-control'}),
             'tipo_documento': forms.Select(attrs={'class': 'form-control'}),

@@ -10,8 +10,13 @@ from django.views.generic.edit import DeleteView
 from django.core.urlresolvers import reverse_lazy
 import random
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import logging
+import time
 
+logger = logging.getLogger(__name__)
 
+"""La función hace una captura de la entidad DeclarantesRegistrados de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_declarantes(request):
     declaraciones = TomaDeclaracion.objects.all()
     paginator = Paginator(declaraciones, 10) # muestra 10 contactos por página
@@ -30,6 +35,8 @@ def lista_declarantes(request):
     )
 
 
+"""La función hace una captura de la entidad Solicitudes de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_solicitantes(request):
     solicitantes = InformacionSolicitante.objects.all()
     paginator = Paginator(solicitantes, 10) # muestra 10 contactos por página
@@ -48,6 +55,8 @@ def lista_solicitantes(request):
     )
 
 
+"""La función hace una captura de la entidad AsociadosDeclarante de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_asociados_declarante(request, id):
     asociados = AsociadoDeclarante.objects.filter(declaracion__id=id)
     declarante = TomaDeclaracion.objects.get(id=id)
@@ -58,6 +67,8 @@ def lista_asociados_declarante(request, id):
     )
 
 
+"""La función hace una captura de la entidad Intermediarios de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_intermediarios(request):
     intermediarios = Intermediario.objects.all()
     paginator = Paginator(intermediarios, 10) # muestra 10 contactos por página
@@ -76,6 +87,8 @@ def lista_intermediarios(request):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_asociado(request):
     informacion = "inicializando"
     titulo="Nuevo asociado"    
@@ -88,11 +101,16 @@ def add_asociado(request):
         )
     else:
         form = asociadoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            informacion = "Guardado"
-        else:
-            informacion = "Error"
+        try:
+            mydate = time.strptime(request.POST['fecha_nacimiento_asociado'], '%d-%m-%Y')
+            if form.is_valid():
+                form.save()
+                informacion = "Guardado"
+            else:
+                informacion = "Error"
+        except Exception, e:
+            informacion = "DateError"
+        
         return render_to_response(
             'add.html', 
             locals(),
@@ -105,6 +123,9 @@ def add_asociado(request):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_asociado_declarante(request, id):
     print "asociado"
     print id
@@ -183,9 +204,15 @@ def update_asociado_declarante(request, id):
         form = asociadoForm(instance=asociado)
     else:
         form = asociadoForm(request.POST, instance=asociado)
-        if form.is_valid():
-            form.save()
-            informacion = "Guardado"
+        try:
+            mydate = time.strptime(request.POST['fecha_nacimiento_asociado'], '%d-%m-%Y')
+            if form.is_valid():
+                form.save()
+                informacion = "Guardado"
+            else:
+                informacion = "Error"
+        except Exception, e:
+            informacion = "DateError"
         return render_to_response(
             'add_form_asociados.html', 
             locals(),
@@ -197,6 +224,8 @@ def update_asociado_declarante(request, id):
     )
   
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_beneficio_asociado(request, id):
     informacion = "inicializando"
     titulo="Asignar beneficio"
@@ -232,6 +261,8 @@ def add_beneficio_asociado(request, id):
     )
 
 
+"""La función realiza una consulta en la base de datos a partir de un identificador para determinar el registro seleccionado,
+una vez encontrado se procede a eliminar."""
 def delete_beneficio_asociado(request, idben, id):
     beneficio = BeneficioAsociado.objects.get(id=idben)
     informacion = 'Procesando'
@@ -245,6 +276,9 @@ def delete_beneficio_asociado(request, idben, id):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_beneficio_asociado(request, idben, id):
     beneficios = BeneficioAsociado.objects.get(id=idben)
     informacion = "Procesando"
@@ -274,6 +308,8 @@ def update_beneficio_asociado(request, idben, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_correccion_declaracion(request):
     informacion = "inicializando"
     titulo="Anexar corrección"
@@ -302,6 +338,10 @@ def add_correccion_declaracion(request):
     )
 
 
+"""La función agrega un nuevo registro a la entidad TomaDeclaracion, a su vez crea dos nuevos registros en las entidades Asociados 
+y VerificacionProcedimiento, los cuales se relacionan directamente con el registro principal, se integran tres formularios
+los cuales son estructurados a partir de los modelos correspondientes de la base de datos, una vez validados estos, se 
+almacenan simultaneamente."""
 def add_declaracion(request):
     informacion = "inicializando"
     titulo="Nuevo declarante"
@@ -318,28 +358,34 @@ def add_declaracion(request):
         form = declaracionForm(request.POST)
         form2 = verificacionProcedimientoForm(request.POST)
         form3 = declaranteAsociadoForm(request.POST)
-        if form.is_valid() and form2.is_valid() and form3.is_valid():
-            declar = form.save()
-            verif = form2.save()
-            declar.verificacion_id = verif.id
-            verif.declaracion_id=declar.id
-            declar.save()
-            verif.save()
-            asoc = form3.save(commit=False)
-            asoc.declaracion_id=declar.id
-            asoc.primer_nombre_asociado = declar.primer_nombre_declarante
-            asoc.demas_nombres_asociado = declar.demas_nombres_declarante
-            asoc.primer_apellido_asociado = declar.primer_apellido_declarante
-            asoc.segundo_apellido_asociado = declar.segundo_apellido_declarante
-            asoc.numero_documento_asociado = declar.numero_documento_declarante
-            asoc.fecha_nacimiento_asociado = declar.fecha_nacimiento_declarante
-            asoc.estado_atencion_asociado = declar.estado_atencion_declarador
-            asoc.tipo_documento_id = declar.tipo_documento_id
-            asoc.parentezco_id = 1014#parentezco declarante
-            asoc.save()
-            informacion = "Guardado"
-        else:
-            informacion = "Error"
+                
+        try:
+            mydate = time.strptime(request.POST['fecha_nacimiento_declarante'], '%d-%m-%Y')
+            mydate2 = time.strptime(request.POST['fecha_declaracion'], '%d-%m-%Y')
+            if form.is_valid() and form2.is_valid() and form3.is_valid():
+                declar = form.save()
+                verif = form2.save()
+                declar.verificacion_id = verif.id
+                verif.declaracion_id=declar.id
+                declar.save()
+                verif.save()
+                asoc = form3.save(commit=False)
+                asoc.declaracion_id=declar.id
+                asoc.primer_nombre_asociado = declar.primer_nombre_declarante
+                asoc.demas_nombres_asociado = declar.demas_nombres_declarante
+                asoc.primer_apellido_asociado = declar.primer_apellido_declarante
+                asoc.segundo_apellido_asociado = declar.segundo_apellido_declarante
+                asoc.numero_documento_asociado = declar.numero_documento_declarante
+                asoc.fecha_nacimiento_asociado = declar.fecha_nacimiento_declarante
+                asoc.estado_atencion_asociado = declar.estado_atencion_declarador
+                asoc.tipo_documento_id = declar.tipo_documento_id
+                asoc.parentezco_id = 1014#parentezco declarante
+                asoc.save()
+                informacion = "Guardado"
+            else:
+                informacion = "Error"
+        except Exception, e:
+            informacion = "DateError"
         return render_to_response(
             'add_declarante.html', 
             locals(),
@@ -347,6 +393,8 @@ def add_declaracion(request):
         )
 
 
+"""La función hace uso de tres identificadores correspondientes a la declaración, verificación de procedimiento y asociado para
+construir los formularios con los datos actuales y permitir hacer modificaciones en uno o más campos de cualquiera de estos."""
 def update_declarante(request, id):
     declarante = TomaDeclaracion.objects.get(id=id)
     verificacion = VerificacionProcedimiento.objects.get(declaracion_id=id)
@@ -381,24 +429,30 @@ def update_declarante(request, id):
         form = declaracionForm(request.POST, instance=declarante)
         form2 = verificacionProcedimientoForm(request.POST, instance=verificacion)
         form3 = declaranteAsociadoForm(request.POST, instance=asociado)
-        if form.is_valid() and form2.is_valid() and form3.is_valid():
-            declar = form.save()
-            form2.save()
-            asoc = form3.save(commit=False)
-            asoc.declaracion_id=declar.id
-            asoc.primer_nombre_asociado = declar.primer_nombre_declarante
-            asoc.demas_nombres_asociado = declar.demas_nombres_declarante
-            asoc.primer_apellido_asociado = declar.primer_apellido_declarante
-            asoc.segundo_apellido_asociado = declar.segundo_apellido_declarante
-            asoc.numero_documento_asociado = declar.numero_documento_declarante
-            asoc.fecha_nacimiento_asociado = declar.fecha_nacimiento_declarante
-            asoc.estado_atencion_asociado = declar.estado_atencion_declarador
-            asoc.tipo_documento_id = declar.tipo_documento_id
-            asoc.parentezco_id = 1014#parentezco declarante
-            asoc.save()
-            informacion = "Guardado"
-        else:
-            informacion = "Error"
+        
+        try:
+            mydate = time.strptime(request.POST['fecha_nacimiento_declarante'], '%d-%m-%Y')
+            mydate2 = time.strptime(request.POST['fecha_declaracion'], '%d-%m-%Y')
+            if form.is_valid() and form2.is_valid() and form3.is_valid():
+                declar = form.save()
+                form2.save()
+                asoc = form3.save(commit=False)
+                asoc.declaracion_id=declar.id
+                asoc.primer_nombre_asociado = declar.primer_nombre_declarante
+                asoc.demas_nombres_asociado = declar.demas_nombres_declarante
+                asoc.primer_apellido_asociado = declar.primer_apellido_declarante
+                asoc.segundo_apellido_asociado = declar.segundo_apellido_declarante
+                asoc.numero_documento_asociado = declar.numero_documento_declarante
+                asoc.fecha_nacimiento_asociado = declar.fecha_nacimiento_declarante
+                asoc.estado_atencion_asociado = declar.estado_atencion_declarador
+                asoc.tipo_documento_id = declar.tipo_documento_id
+                asoc.parentezco_id = 1014#parentezco declarante
+                asoc.save()
+                informacion = "Guardado"
+            else:
+                informacion = "Error"
+        except Exception, e:
+            informacion = "DateError"
         return render_to_response(
             'add_declarante_hechos.html', 
             locals(),
@@ -411,6 +465,8 @@ def update_declarante(request, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_discapacidad_asociado(request, id):
     print id
     informacion = "inicializando"
@@ -446,6 +502,8 @@ def add_discapacidad_asociado(request, id):
     )
 
 
+"""La función realiza una consulta en la base de datos a partir de un identificador para determinar el registro seleccionado,
+una vez encontrado se procede a eliminar."""
 def delete_discapacidad_asociado(request, iddisc, id):
     discapacidad = DiscapacidadAsociado.objects.get(id=iddisc)
     informacion = 'Procesando'
@@ -464,6 +522,9 @@ def delete_discapacidad_asociado(request, iddisc, id):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_discapacidad_asociado(request, iddisc, id):
     discapacidades = DiscapacidadAsociado.objects.get(id=iddisc)
     informacion = "Procesando"
@@ -493,6 +554,8 @@ def update_discapacidad_asociado(request, iddisc, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_etnia_asociado(request, id):
     informacion = "inicializando"
     titulo="Asignar etnia"
@@ -527,6 +590,8 @@ def add_etnia_asociado(request, id):
     )
 
 
+"""La función realiza una consulta en la base de datos a partir de un identificador para determinar el registro seleccionado,
+una vez encontrado se procede a eliminar."""
 def delete_etnia_asociado(request, idet, id):
     etnia = EtniaAsociado.objects.get(id=idet)
     informacion = 'Procesando'
@@ -540,6 +605,9 @@ def delete_etnia_asociado(request, idet, id):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_etnia_asociado(request, idet, id):
     etnias = EtniaAsociado.objects.get(id=idet)
     informacion = "Procesando"
@@ -570,6 +638,8 @@ def update_etnia_asociado(request, idet, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_hecho_declarante(request, id):
     informacion = "inicializando"
     titulo="Nuevo hecho victimizario"
@@ -610,6 +680,8 @@ def add_hecho_declarante(request, id):
     )
 
 
+"""La función realiza una consulta en la base de datos a partir de un identificador para determinar el registro seleccionado,
+una vez encontrado se procede a eliminar."""
 def delete_hecho_declarante(request, idhec, id):
     hecho = HechoDeclarante.objects.get(id=idhec)
     informacion = 'Procesando'
@@ -623,6 +695,9 @@ def delete_hecho_declarante(request, idhec, id):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_hecho_declarante(request, idhec, id):
     hecho = HechoDeclarante.objects.get(id=idhec)
     informacion = "Procesando"
@@ -652,6 +727,8 @@ def update_hecho_declarante(request, idhec, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_hecho_asociado(request, id):
     informacion = "inicializando"
     titulo="Nuevo hecho victimizario"
@@ -687,6 +764,8 @@ def add_hecho_asociado(request, id):
     )
 
 
+"""La función realiza una consulta en la base de datos a partir de un identificador para determinar el registro seleccionado,
+una vez encontrado se procede a eliminar."""
 def delete_hecho_asociado(request, idhec, id):
     hecho = HechoAsociado.objects.get(id=idhec)
     informacion = 'Procesando'
@@ -700,6 +779,9 @@ def delete_hecho_asociado(request, idhec, id):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_hecho_asociado(request, idhec, id):
     hecho = HechoAsociado.objects.get(id=idhec)
     informacion = "Procesando"
@@ -729,6 +811,8 @@ def update_hecho_asociado(request, idhec, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_informacion_solicitante(request):
     #panel de preguntas y respuestas para generar un capcha de verificación a fin de controlar el acceso de robots
     preguntas = ["¿Cuanto da tres por cuatro?",
@@ -772,6 +856,9 @@ def add_informacion_solicitante(request):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_informacion_solicitante(request, id):
     solicitante = InformacionSolicitante.objects.get(id=id)
     informacion = "Procesando"
@@ -797,6 +884,8 @@ def update_informacion_solicitante(request, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_intermediario(request):
     informacion = "inicializando"
     titulo="Nuevo intermediario"
@@ -826,6 +915,9 @@ def add_intermediario(request):
     )
 
 
+"""La función captura un registro de la entidad seleccionado para ser modificado a partir de su identificador, presenta
+un formulario estructurado a partir del modelo correspondiente con los campos presentados en el registro y permite hacer
+cambios para luego ser almacenados en la base de datos."""
 def update_intermediario(request, id):
     intermediario = Intermediario.objects.get(id=id)
     informacion = "Procesando"
@@ -851,6 +943,8 @@ def update_intermediario(request, id):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_tipo_intermediario(request):
     informacion = "inicializando"
     titulo="Nuevo tipo de intermediario"    

@@ -15,7 +15,7 @@ class AsociadoDeclarante(models.Model):
     fecha_nacimiento_asociado = models.CharField(max_length=20)
     mujer_cabeza_familia = models.CharField(max_length=2)
     gestante_lactante = models.CharField(max_length=2)
-    estado_atencion_asociado = models.CharField(max_length=15)
+    estado_atencion_asociado = models.CharField(max_length=100)
 
     class Meta: 
         verbose_name_plural = 'Asociados del declarante'
@@ -142,6 +142,7 @@ class TipoIntermediario(models.Model):
 
 
 class TomaDeclaracion(models.Model):
+    codigo_declaracion = models.BigIntegerField(unique=True)
     lugar_declaracion = models.ForeignKey('generales.LugarDeclaracion', blank=True, null=True)
     entidad = models.ForeignKey('generales.EntidadAtencion', blank=True, null=True)
     verificacion = models.ForeignKey('VerificacionProcedimiento', blank=True, null=True)
@@ -175,7 +176,7 @@ class TomaDeclaracion(models.Model):
     mensajes_fijo_declarante = models.CharField(max_length=2)
     mensajes_email_declarante = models.CharField(max_length=2)
     mensajes_otros_declarante = models.CharField(max_length=50, blank=True, null=True)
-    estado_atencion_declarador = models.CharField(max_length=15)
+    estado_atencion_declarador = models.CharField(max_length=100)
 
     class Meta: 
         verbose_name_plural = 'Tomas de declaraciones'
