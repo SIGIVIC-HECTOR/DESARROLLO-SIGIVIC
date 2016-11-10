@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+	<h3>Beneficios disponibles</h3>
+		<div style="width:100%; overflow: scroll; overflow-y: hidden;">
+		<table class="table table-bordered table-hover table-striped table-reflow tabla">
+	  		<ul>
+	  		<tr>
+				<th>ID</th>
+				<th>Nombre del programa</th>
+				<th>Estado de gestión del programa</th>
+				<th>Meta</th>
+				<th>Acciones</th>
+			</tr>
+		{% for i in registros %}
+		<tr>
+			<td>{{i.id}}</td>
+			<td>{{i.nombre_programa}}</td>
+			<td>{{i.estado_gestion_programa}}</td>
+			<td>{{i.meta_programa}}</td>
+			<td><a class="glyphicon glyphicon-edit icon-align" title="Ver registro" href="{% url 'beneficios:update_beneficio' i.id %}"></a></td>
+		</tr>
+		{% empty %}
+			vacío
+		{% endfor %}
+		</ul>
+	</table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if registros.has_previous %}
+            <a href="?page={{ registros.previous_page_number }}">anterior</a>
+        {% endif %}
+        <span class="current">
+            Página {{ registros.number }} de {{ registros.paginator.num_pages }}.
+        </span>
+        {% if registros.has_next %}
+            <a href="?page={{ registros.next_page_number }}">siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+<form action="{% url 'beneficios:add_beneficio' %}" method="get">
+	{% csrf_token %}
+	<button type="submit" class="btn btn-primary btn-block">Agregar</button>
+</form>
+
+{% endblock content %}
