@@ -6,6 +6,8 @@ from beneficios.forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
+"""La función hace una captura de la entidad BeneficioVictima de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_beneficios(request):
     beneficios = BeneficioVictima.objects.all()
     paginator = Paginator(beneficios, 10) # muestra 10 contactos por página
@@ -24,6 +26,8 @@ def lista_beneficios(request):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_beneficio(request):
     informacion = "inicializando"
     titulo="Nuevo beneficio"
@@ -53,6 +57,8 @@ def add_beneficio(request):
     )
 
 
+"""La función obtiene un registro de la entidad correspondiente de la base de datos a partir de su id, hace uso
+de un formulario estructurado a partir de la misma entidad y actualiza los datos en el mismo registro consultado."""
 def update_beneficio(request, id):
     beneficio = BeneficioVictima.objects.get(id=id)
     informacion = "Procesando"

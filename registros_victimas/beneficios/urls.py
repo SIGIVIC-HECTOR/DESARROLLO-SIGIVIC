@@ -1,4 +1,7 @@
+# -*- coding: 850 -*-
 from django.conf.urls import include, url
+
+"""Cada url crea una nueva dirección en el sitio a partir de la dirección base beneficios"""
 
 urlpatterns = [
     url(r'^add_beneficio/$', 'beneficios.views.add_beneficio', name='add_beneficio'),
