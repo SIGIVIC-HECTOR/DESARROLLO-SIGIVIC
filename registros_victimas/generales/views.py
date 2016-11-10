@@ -18,6 +18,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import csv
 
 
+"""La función permite alternar el estado de recepción de solicitudes por parte de los usuarios
+invidados, donde activo es un estado en el que se permiten estas e inactivo donde no"""
 def estado_clientes_view(request):
     sistema = InformacionSolicitante.objects.get(id=0)#se obtiene el registro cero para comprobar si se están aceptando solicitudes
     estado = sistema.descripcion#corresponde al estado actual del sistema de registro de solicitudes por parte de los usuarios
@@ -47,6 +49,18 @@ def estado_clientes_view(request):
     )
 
 
+"""La función dirige a una página en la cual se encuentra la información completa
+correspondiente a la ley 1448 de 2011"""
+def info(request):
+    return render_to_response(
+        'info.html', 
+        locals(), 
+        context_instance=RequestContext(request)
+    )
+
+
+"""La función hace una captura de la entidad LugaresDeclaracion de la base de datos y presenta todos sus registros
+en una lista paginada."""
 def lista_lugares_declaracion(request):
     lugares = LugarDeclaracion.objects.all()
     paginator = Paginator(lugares, 15) # muestra 15 contactos por página
@@ -74,6 +88,10 @@ def lista_tipos_documentos_generales(request):
         context_instance=RequestContext(request)
     )
 
+
+"""presenta una lista con tres elementos los cuales son solocitantes atendidos, en revisión y pendientes,
+la función hace un conteo de los solicitantes correspondientes al estado y presenta el número de estos
+dentro de cada elemento de la lista correspondiente"""
 def lista_notificaciones(request, id):
     titulo = ''
     #obtiene el valor seleccionado por el usuario donde 1 es atendidos, 2 pendientes y 3 en revisión
@@ -105,6 +123,9 @@ def lista_notificaciones(request, id):
         context_instance=RequestContext(request)
     )
 
+
+"""La función hace un conteo de los solicitantes en cada estado, su objetivo es enviar estos valores de forma parametrizada para
+presentarse por la función lista_notificaciones"""
 def notificaciones(request):
     #filtra los registros de solicitudes por el estado actual
     atendidos = InformacionSolicitante.objects.filter(estado_revision='Atendido')
@@ -121,6 +142,8 @@ def notificaciones(request):
     )
     
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_entidad_atencion(request):
     informacion = "inicializando"
     titulo="Nueva entidad de atención"
@@ -151,6 +174,8 @@ def add_entidad_atencion(request):
     )        
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_tipo_documento(request):
     if request.method == "POST":
         form = addTipoDocumentoForm(request.POST) 
@@ -181,6 +206,11 @@ def add_tipo_documento(request):
         )
 
 
+"""La función matriz estructura un arreglo de arreglos donde se evalúa en 4 niveles de inmersión las relaciones entre
+los asociados del declarante y los beneficios otorgados para estos, los datos se estructuran de forma horizontal tomando
+los datos de cada beneficio y haciendo cálculos de sus características a partir de los presupuestos disponibles y los 
+enfoques diferenciales registrados en cada asociado correspondiente, además asocia el derecho involucrado en el beneficio en 
+cuestión, y de forma vertical haciendo una pila de los beneficios que registran asociados en estado de atención activo."""
 def matriz(request):    
     
     beneficiosAsociados = BeneficioAsociado.objects.all()
@@ -591,7 +621,17 @@ def matriz(request):
         
         writer = csv.writer(response, delimiter=';')
         writer.writerow(head)
+        hoja_calculo=[]
         for i in datosBeneficio:
+            fila_hoja=[]
+            for j in i:
+                try:
+                    mm=unicode(j).encode('utf-8')
+                    fila_hoja.append(mm)
+                except Exception, e:
+                    print e
+            hoja_calculo.append(fila_hoja)
+        for i in hoja_calculo:
             writer.writerow(i)
 
         return response
@@ -601,6 +641,7 @@ def matriz(request):
     )
     
 
+"""La función index dirige al sitio hacia la página de inicio declarada si esta es llamada"""
 @login_required
 def index_view(request):
     return render_to_response('index.html', 
@@ -609,6 +650,9 @@ def index_view(request):
     )
 
 
+"""La función captura los datos proporcionados por el usuario que intenta acceder al sistema, si los datos
+de validación son correctos se hace uso de la función index_view la cual dirige a la página de inicio,
+de lo contrario vuelve a la página de login y emite un mensaje de error."""
 def login_view(request):
     if request.user.is_authenticated():
         return render_to_response('index.html', 
@@ -636,6 +680,8 @@ def login_view(request):
     )
 
 
+"""La función finaliza la validación de un usuario logueado y lo dirige a la página de login, mediante esta misma
+se puede hacer un login nuevamente al igual que la función login_view."""
 def logout_view(request):
     logout(request)
     #messages.success(request, 'Desconectado satisfactoriamente')
@@ -659,6 +705,8 @@ def logout_view(request):
     )
 
 
+"""La función agrega un nuevo registro a la entidad de la base de datos correspondiente, el proceso de validación se hace
+mediante un formulario estructurado a partir de la misma entidad de la base de datos."""
 def add_lugar_declaracion(request):
     informacion = "inicializando"
     titulo="Nuevo lugar de declaración"

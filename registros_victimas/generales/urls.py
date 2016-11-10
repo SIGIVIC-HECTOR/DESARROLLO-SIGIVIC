@@ -1,4 +1,7 @@
+# -*- coding: 850 -*-
 from django.conf.urls import include, url
+
+"""Cada url crea una nueva dirección en el sitio a partir de la dirección base generales"""
 
 urlpatterns = [
 	url(r'^add_tipo_doc/$', 'generales.views.add_tipo_documento', name='add_tipo_documento'),
@@ -13,4 +16,5 @@ urlpatterns = [
     url(r'^estado_clientes_view/$', 'generales.views.estado_clientes_view', name='estado_clientes_view'),
     url(r'^lista_notificaciones/(?P<id>\d+)/$', 'generales.views.lista_notificaciones', name='lista_notificaciones'),
     url(r'^notificaciones/$', 'generales.views.notificaciones', name='notificaciones'),
+    url(r'^info/$', 'generales.views.info', name='info'),
 ]
